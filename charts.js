@@ -62,29 +62,29 @@ function buildCharts(sample) {
     console.log(samplesList);
   
     // 4. Create a variable that filters the samples for the object with the desired sample number.
+    var filteredSample = samplesList.filter(sample => sample)[0];
+      console.log(filteredSample);
+    
+    
     //  5. Create a variable that holds the first sample in the array.
-    d3.json("samples.json").then(function(data){
+    
     var samplesId = data.samples[0].id;
-      
     console.log(samplesId);
     
-    })
+    
     
     // 6. Create variables that hold the otu_ids, otu_labels, and sample_values.
-    d3.json("samples.json").then(function(data){
-    var otuIds = data.samples[0].otu_ids;
+    
+    var otuIds = filteredSample.otu_ids;
       console.log(otuIds);
     
-  
     
-
-    d3.json("samples.json").then((data) => {
-      var otuLabels = data.samples[0].otu_labels;
+    var otuLabels = filteredSample.otu_labels;
       console.log(otuLabels);
     
     
-    d3.json("samples.json").then((data) => {
-     var sampleValues = data.samples[0].sample_values;
+    
+    var sampleValues = filteredSample.sample_values;
       console.log(sampleValues);
       
     
@@ -92,13 +92,18 @@ function buildCharts(sample) {
     // 7. Create the yticks for the bar chart.
     // Hint: Get the the top 10 otu_ids and map them in descending order  
     //  so the otu_ids with the most bacteria are last. 
+    //var topTen = data.samples.map(object => object.otu_ids).sort((a, b) => b - a);
+    var topTen = console.log(otuIds.slice(0, 10));
+    var yTicks = topTen
+    console.log(topTen);
+    //var yTicks = topTen.map((a,b) => b.otuId - a.otuId);
+    //console.log(yTicks);
+     //var yTicks = console.log(topTen);
+    //var yTicks = topTen.map(otuId => otuID); {
+     //console.log(topten);
     
-    var yticks = d3.json("samples.json").then((data) => {
-    data.samples.map(object => object.otu_ids).sort((a,b) => b - a);
-    console.log(data.samples[0].otu_ids.slice(0, 10));
-  
     //otuIds = d3.json("samples.json").then((data) => {
-    //otuIds = data.samples.map(object => 
+    //otuIds = otuIds.map(object => 
     //object.otu_ids).sort((a,b) => b - a);
       //console.log(otuIds.slice(0, 10));
     
@@ -108,7 +113,7 @@ function buildCharts(sample) {
     // 8. Create the trace for the bar chart. 
     var trace = {
       x: sampleValues,
-      y: yticks,
+      y: yTicks,
       text: otuLabels,
       type: "bar",
       orientation: "h"
@@ -122,10 +127,6 @@ function buildCharts(sample) {
     // 10. Use Plotly to plot the data with the layout. 
     Plotly.newPlot("bar", barData, barLayout);
   })
- });
-});
-
-});
-})
 }
+
 
