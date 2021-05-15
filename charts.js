@@ -62,29 +62,33 @@ function buildCharts(sample) {
     console.log(samplesList);
   
     // 4. Create a variable that filters the samples for the object with the desired sample number.
-    var filteredSample = samplesList.filter(sample => sample)[0];
+    //var filteredSample = samplesList.filter(sample => sample)[0];
+      //console.log(filteredSample);
+      //var samples = data.samples;
+      // Filter the data for the object with the desired sample number
+      var filteredSample = samplesList.filter(sampleObj => sampleObj.id == sample);
       console.log(filteredSample);
-    
+      
     
     //  5. Create a variable that holds the first sample in the array.
-    
-    var samplesId = data.samples[0].id;
-    console.log(samplesId);
+    var results = filteredSample[0];
+    //var samplesId = data.samples[0].id;
+    console.log(results);
     
     
     
     // 6. Create variables that hold the otu_ids, otu_labels, and sample_values.
     
-    var otuIds = filteredSample.otu_ids;
+    var otuIds = results.otu_ids;
       console.log(otuIds);
     
     
-    var otuLabels = filteredSample.otu_labels;
+    var otuLabels = results.otu_labels;
       console.log(otuLabels);
     
     
     
-    var sampleValues = filteredSample.sample_values;
+    var sampleValues = results.sample_values;
       console.log(sampleValues);
       
     
@@ -92,10 +96,13 @@ function buildCharts(sample) {
     // 7. Create the yticks for the bar chart.
     // Hint: Get the the top 10 otu_ids and map them in descending order  
     //  so the otu_ids with the most bacteria are last. 
-    //var topTen = data.samples.map(object => object.otu_ids).sort((a, b) => b - a);
+    //var topTen = data.samples.map(object => object.otuIds).sort((a, b) => b - a);
     var topTen = console.log(otuIds.slice(0, 10));
-    var yTicks = topTen
-    console.log(topTen);
+    
+    //var highLow = otuIds.sort((a,b) => a.otuIds - b.otuIds);
+    //console.log(highLow);
+    var yTicks = [ 'OTU 1167', 'OTU 2859', 'OTU 482', 'OTU 2264', 'OTU 41', 'OTU 1189', 'OTU 352', 'OTU 189', 'OTU 2318', 'OTU 1977'];
+    
     //var yTicks = topTen.map((a,b) => b.otuId - a.otuId);
     //console.log(yTicks);
      //var yTicks = console.log(topTen);
@@ -122,11 +129,74 @@ function buildCharts(sample) {
     // 9. Create the layout for the bar chart. 
     var barLayout = {
       title: "Top 10 Bacteria Culture Found",
-     
+      
     };
+    
     // 10. Use Plotly to plot the data with the layout. 
     Plotly.newPlot("bar", barData, barLayout);
-  })
+
+
+
+// 1. Create the trace for the bubble chart.
+  var trace1 = {
+    x: otuIds,
+    y: sampleValues,
+    text: otuLabels,
+    mode: 'markers',
+    marker: {
+    color:['rgb(93, 164, 214)', 'rgb(255, 144, 14)',  'rgb(44, 160, 101)', 'rgb(255, 65, 54)'],
+    opacity: [1, 0.8, 0.6, 0.4],
+    size:[40, 60, 80, 100]
+  }
 }
+  var bubbleData = [trace1];
 
+// 2. Create the layout for the bubble chart.
+  var bubbleLayout = {
+    hovermode:'closest',
+    title: 'Bacteria Cultures Per Sample',
+    xaxis_title: 'OTU ID',
+};
 
+// 3. Use Plotly to plot the data with the layout.
+Plotly.newPlot("bubble", bubbleData, bubbleLayout);
+
+// 4. Create the trace for the gauge chart.
+d3.json("samples.json").then((data) => {
+var metadata = data.metadata;
+    // Filter the data for the object with the desired sample number
+    var resultArray = metadata.filter(sampleObj => sampleObj.id == sample);
+    var result = resultArray[0];
+   
+  var wfreq = parseFloat(result.wfreq);
+  console.log(wfreq);
+})
+
+var trace2 = {
+  value: 2,
+  title: { text: "Scrubs per week"},
+  type: "indicator",
+  mode: "gauge+number",
+  gauge: {
+    axis: { range: [null, 10], color: "black"},
+    steps: [
+      { range: [0, 2], color: "red"},
+      { range: [2, 4], color: "orange"},
+      { range: [4, 6], color: "yellow"},
+      { range: [6, 8], color: "lime"},
+      { range: [8, 10], color: "green"}
+    ],
+  }
+}
+var gaugeData = [trace2];
+
+// 5. Create the layout for the gauge chart.
+var gaugeLayout = { width: 500, height: 400, margin: { t: 0, b: 0 }
+ 
+};
+
+// 6. Use Plotly to plot the gauge data and layout.
+Plotly.newPlot('gauge', gaugeData, gaugeLayout);
+
+});
+}
