@@ -95,24 +95,17 @@ function buildCharts(sample) {
 
     // 7. Create the yticks for the bar chart.
     // Hint: Get the the top 10 otu_ids and map them in descending order  
-    //  so the otu_ids with the most bacteria are last. 
-    //var topTen = data.samples.map(object => object.otuIds).sort((a, b) => b - a);
-    var topTen = console.log(otuIds.slice(0, 10));
+    //  so the otu_ids with the most bacteria are
+     var data = otuIds
+     data.sort(function(a,b) { return (a.otuId - b.otuId); })
+     data = data.slice(0, 10);
+     data = data.reverse();
+     console.log(data);
+     //var topTen = console.log(otuIds.slice(0, 10));
     
-    //var highLow = otuIds.sort((a,b) => a.otuIds - b.otuIds);
-    //console.log(highLow);
-    var yTicks = [ 'OTU 1167', 'OTU 2859', 'OTU 482', 'OTU 2264', 'OTU 41', 'OTU 1189', 'OTU 352', 'OTU 189', 'OTU 2318', 'OTU 1977'];
     
-    //var yTicks = topTen.map((a,b) => b.otuId - a.otuId);
-    //console.log(yTicks);
-     //var yTicks = console.log(topTen);
-    //var yTicks = topTen.map(otuId => otuID); {
-     //console.log(topten);
+    var yTicks = [ 'OTU 1167', 'OTU 2859', 'OTU 482', 'OTU 2264', 'OTU 41', 'OTU 1189', 'OTU 352', 'OTU 189', 'OTU 2318','OTU 1977'];
     
-    //otuIds = d3.json("samples.json").then((data) => {
-    //otuIds = otuIds.map(object => 
-    //object.otu_ids).sort((a,b) => b - a);
-      //console.log(otuIds.slice(0, 10));
     
 
       
