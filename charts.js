@@ -80,10 +80,12 @@ function buildCharts(sample) {
     // 6. Create variables that hold the otu_ids, otu_labels, and sample_values.
     
     var otuIds = results.otu_ids;
+    
       console.log(otuIds);
     
     
     var otuLabels = results.otu_labels;
+    
       console.log(otuLabels);
     
     
@@ -96,25 +98,21 @@ function buildCharts(sample) {
     // 7. Create the yticks for the bar chart.
     // Hint: Get the the top 10 otu_ids and map them in descending order  
     //  so the otu_ids with the most bacteria are
-     var data = otuIds
-     data.sort(function(a,b) { return (a.otuId - b.otuId); })
-     data = data.slice(0, 10);
-     data = data.reverse();
-     console.log(data);
+     
      //var topTen = console.log(otuIds.slice(0, 10));
     
     
-    var yTicks = [ 'OTU 1167', 'OTU 2859', 'OTU 482', 'OTU 2264', 'OTU 41', 'OTU 1189', 'OTU 352', 'OTU 189', 'OTU 2318','OTU 1977'];
+    //var yTicks = [ 'OTU 1167', 'OTU 2859', 'OTU 482', 'OTU 2264', 'OTU 41', 'OTU 1189', 'OTU 352', 'OTU 189', 'OTU 2318','OTU 1977'];
     
-    
+    //var yTicks = [ 'OTU 1977', 'OTU 2318', 'OTU 189', 'OTU 352', 'OTU 1189', 'OTU 41', 'OTU 2264', 'OTU 482', 'OTU 2859',  'OTU 1167'];
 
-      
+      var yticks = otuIds.slice(0, 10).map(otuID => `OTU ${otuID}`).reverse();
     
     // 8. Create the trace for the bar chart. 
     var trace = {
-      x: sampleValues,
-      y: yTicks,
-      text: otuLabels,
+      x: sampleValues.slice(0, 10).reverse(),
+      y: yticks,
+      text: otuLabels.slice(0, 10).reverse(),
       type: "bar",
       orientation: "h"
     };
@@ -137,18 +135,22 @@ function buildCharts(sample) {
     text: otuLabels,
     mode: 'markers',
     marker: {
-    color:['rgb(93, 164, 214)', 'rgb(255, 144, 14)',  'rgb(44, 160, 101)', 'rgb(255, 65, 54)'],
+    color: otuIds,
     opacity: [1, 0.8, 0.6, 0.4],
-    size:[40, 60, 80, 100]
+    size: sampleValues
   }
 }
   var bubbleData = [trace1];
 
 // 2. Create the layout for the bubble chart.
   var bubbleLayout = {
+    xaxis: {
+      title: 'Otu ID'
+    },
+    title: "Bacteria Cultures Per Sample",
     hovermode:'closest',
-    title: 'Bacteria Cultures Per Sample',
-    xaxis_title: 'OTU ID',
+
+  
 };
 
 // 3. Use Plotly to plot the data with the layout.
@@ -161,17 +163,18 @@ var metadata = data.metadata;
     var resultArray = metadata.filter(sampleObj => sampleObj.id == sample);
     var result = resultArray[0];
    
-  var wfreq = parseFloat(result.wfreq);
-  console.log(wfreq);
-})
+  var wFreq = parseFloat(result.wfreq);
+  console.log(wFreq);
+
 
 var trace2 = {
-  value: 2,
-  title: { text: "Scrubs per week"},
+  value: wFreq,
+  title: { text: "Belly Button Washing Frequency", text: "Scrubs per Week"},
   type: "indicator",
   mode: "gauge+number",
   gauge: {
     axis: { range: [null, 10], color: "black"},
+    bar: { color: 'black'},
     steps: [
       { range: [0, 2], color: "red"},
       { range: [2, 4], color: "orange"},
@@ -190,6 +193,8 @@ var gaugeLayout = { width: 500, height: 400, margin: { t: 0, b: 0 }
 
 // 6. Use Plotly to plot the gauge data and layout.
 Plotly.newPlot('gauge', gaugeData, gaugeLayout);
+
+});
 
 });
 }
